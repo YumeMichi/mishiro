@@ -4,7 +4,7 @@ import ProgressBar from '../../vue/component/ProgressBar.vue'
 import check from './check'
 import { setLatestResVer, setMaster, setResVer } from './store'
 
-import MishiroIdol from './mishiro-idol'
+// import MishiroIdol from './mishiro-idol'
 // import { bgmList } from './the-player'
 // import { unpackTexture2D } from './unpack-texture-2d'
 // import { Client } from './typings/main'
@@ -12,12 +12,12 @@ import getPath from '../common/get-path'
 import configurer from './config'
 import { getMasterHash, openManifestDatabase, readMasterData } from './ipc-back'
 import type { MishiroConfig } from '../main/config'
-import { readAcb } from './audio'
-import type { BGM } from './back/resolve-audio-manifest'
-import { error, warn } from './log'
+// import { readAcb } from './audio'
+// import type { BGM } from './back/resolve-audio-manifest'
+import { error/* , warn */ } from './log'
 const fs = window.node.fs
 // const path = window.node.path
-const { manifestPath, masterPath, bgmDir/* , iconDir */ } = getPath
+const { manifestPath, masterPath/* , bgmDir, iconDir */ } = getPath
 // const ipcRenderer = window.node.electron.ipcRenderer
 
 @Component({
@@ -180,153 +180,153 @@ export default class extends Vue {
     setMaster(masterData)
     setLatestResVer(configurer.get('latestResVer') || -1)
 
-    const bgmManifest = masterData.bgmManifest
-    // for (let k in bgmList) {
-    //   if (!fs.existsSync(path.join(getPath('./public'), bgmList[k].src))) {
-    //     let acbName = `b/${toName(bgmList[k].src)}.acb`
-    //     let hash: string = bgmManifest.filter(row => row.name === acbName)[0].hash
+    // const bgmManifest = masterData.bgmManifest
+    // // for (let k in bgmList) {
+    // //   if (!fs.existsSync(path.join(getPath('./public'), bgmList[k].src))) {
+    // //     let acbName = `b/${toName(bgmList[k].src)}.acb`
+    // //     let hash: string = bgmManifest.filter(row => row.name === acbName)[0].hash
+    // //     try {
+    // //       this.text = path.basename(`${toName(bgmList[k].src)}.acb`)
+    // //       this.loading = 0
+    // //       let result = await downloader.downloadSound(
+    // //         'b',
+    // //         hash,
+    // //         bgmDir(`${toName(bgmList[k].src)}.acb`),
+    // //         prog => {
+    // //           this.text = prog.name + '　' + Math.ceil(prog.current / 1024) + '/' + Math.ceil(prog.max / 1024) + ' KB'
+    // //           this.loading = prog.loading / (this.wavProgress ? 2 : 1)
+    // //         }
+    // //       )
+    // //       if (result) {
+    // //         await this.acb2mp3(bgmDir(`${toName(bgmList[k].src)}.acb`), void 0, (_current, _total, prog) => {
+    // //           this.text = prog.name + '　' + this.$t('live.decoding')
+    // //           this.loading = 50 + prog.loading / 2
+    // //         })
+    // //       }
+    // //     } catch (errorPath) {
+    // //       this.event.$emit('alert', this.$t('home.errorTitle'), this.$t('home.downloadFailed') + '<br/>' + errorPath)
+    // //     }
+    // //   }
+    // // }
+    // if (masterData.eventHappening) {
+    //   const eventHca = bgmDir(`bgm_event_${masterData.eventData.id}.hca`)
+    //   const downloadBGMEventType = [1, 3, 4, 5, 7, 8]
+    //   const eventType = Number(masterData.eventData.type)
+    //   if (eventType > 9) {
+    //     warn(`Unknown event type: ${eventType}`)
+    //   }
+    //   if (downloadBGMEventType.includes(eventType) && !fs.existsSync(eventHca)) {
+    //     const eventBgmHash = bgmManifest.filter(row => row.name === `b/bgm_event_${masterData.eventData.id}.acb`)[0].hash
     //     try {
-    //       this.text = path.basename(`${toName(bgmList[k].src)}.acb`)
+    //       // let result = await downloader.download(
+    //       //   this.getBgmUrl(eventBgmHash),
+    //       //   bgmDir(`bgm_event_${masterData.eventData.id}.acb`),
+    //       //   (prog: ProgressInfo) => {
+    //       //     this.text = prog.name + '　' + Math.ceil(prog.current / 1024) + '/' + Math.ceil(prog.max / 1024) + ' KB'
+    //       //     this.loading = prog.loading
+    //       //   }
+    //       // )
+    //       this.text = `bgm_event_${masterData.eventData.id}.acb`
     //       this.loading = 0
-    //       let result = await downloader.downloadSound(
+    //       const eventAcb = bgmDir(this.text)
+    //       const result = await downloader.downloadSound(
     //         'b',
-    //         hash,
-    //         bgmDir(`${toName(bgmList[k].src)}.acb`),
+    //         eventBgmHash,
+    //         eventAcb,
     //         prog => {
-    //           this.text = prog.name + '　' + Math.ceil(prog.current / 1024) + '/' + Math.ceil(prog.max / 1024) + ' KB'
-    //           this.loading = prog.loading / (this.wavProgress ? 2 : 1)
+    //           this.text = (prog.name || '') + '　' + `${Math.ceil(prog.current / 1024)}/${Math.ceil(prog.max / 1024)} KB`
+    //           this.loading = prog.loading /* / (this.wavProgress ? 2 : 1) */
     //         }
     //       )
     //       if (result) {
-    //         await this.acb2mp3(bgmDir(`${toName(bgmList[k].src)}.acb`), void 0, (_current, _total, prog) => {
-    //           this.text = prog.name + '　' + this.$t('live.decoding')
-    //           this.loading = 50 + prog.loading / 2
-    //         })
+    //         const acbEntries = readAcb(eventAcb)
+    //         if (!acbEntries.length) {
+    //           this.event.$emit('alert', this.$t('home.errorTitle'), 'Invalid acb')
+    //           return
+    //         }
+    //         await fs.promises.writeFile(eventHca, acbEntries[0].buffer)
+    //         await fs.remove(eventAcb)
+    //         const audio = this.$store.state.master.bgmManifest.filter((b: BGM) => b.hash === eventBgmHash)[0]
+    //         this.$set(audio, '_canplay', true)
+    //         // await this.acb2mp3(eventAcb, undefined, (_current, _total, prog) => {
+    //         //   this.text = (prog.name || '') + '　' + (this.$t('live.decoding') as string)
+    //         //   this.loading = 50 + prog.loading / 2
+    //         // })
     //       }
     //     } catch (errorPath) {
-    //       this.event.$emit('alert', this.$t('home.errorTitle'), this.$t('home.downloadFailed') + '<br/>' + errorPath)
+    //       this.event.$emit('alert', this.$t('home.errorTitle'), (this.$t('home.downloadFailed') as string) + '<br/>' + (errorPath as string))
     //     }
     //   }
     // }
-    if (masterData.eventHappening) {
-      const eventHca = bgmDir(`bgm_event_${masterData.eventData.id}.hca`)
-      const downloadBGMEventType = [1, 3, 4, 5, 7, 8]
-      const eventType = Number(masterData.eventData.type)
-      if (eventType > 9) {
-        warn(`Unknown event type: ${eventType}`)
-      }
-      if (downloadBGMEventType.includes(eventType) && !fs.existsSync(eventHca)) {
-        const eventBgmHash = bgmManifest.filter(row => row.name === `b/bgm_event_${masterData.eventData.id}.acb`)[0].hash
-        try {
-          // let result = await downloader.download(
-          //   this.getBgmUrl(eventBgmHash),
-          //   bgmDir(`bgm_event_${masterData.eventData.id}.acb`),
-          //   (prog: ProgressInfo) => {
-          //     this.text = prog.name + '　' + Math.ceil(prog.current / 1024) + '/' + Math.ceil(prog.max / 1024) + ' KB'
-          //     this.loading = prog.loading
-          //   }
-          // )
-          this.text = `bgm_event_${masterData.eventData.id}.acb`
-          this.loading = 0
-          const eventAcb = bgmDir(this.text)
-          const result = await downloader.downloadSound(
-            'b',
-            eventBgmHash,
-            eventAcb,
-            prog => {
-              this.text = (prog.name || '') + '　' + `${Math.ceil(prog.current / 1024)}/${Math.ceil(prog.max / 1024)} KB`
-              this.loading = prog.loading /* / (this.wavProgress ? 2 : 1) */
-            }
-          )
-          if (result) {
-            const acbEntries = readAcb(eventAcb)
-            if (!acbEntries.length) {
-              this.event.$emit('alert', this.$t('home.errorTitle'), 'Invalid acb')
-              return
-            }
-            await fs.promises.writeFile(eventHca, acbEntries[0].buffer)
-            await fs.remove(eventAcb)
-            const audio = this.$store.state.master.bgmManifest.filter((b: BGM) => b.hash === eventBgmHash)[0]
-            this.$set(audio, '_canplay', true)
-            // await this.acb2mp3(eventAcb, undefined, (_current, _total, prog) => {
-            //   this.text = (prog.name || '') + '　' + (this.$t('live.decoding') as string)
-            //   this.loading = 50 + prog.loading / 2
-            // })
-          }
-        } catch (errorPath) {
-          this.event.$emit('alert', this.$t('home.errorTitle'), (this.$t('home.downloadFailed') as string) + '<br/>' + (errorPath as string))
-        }
-      }
-    }
 
-    const cardId = this.getEventCardId(masterData.eventAvailable, masterData.eventData)
+    // const cardId = this.getEventCardId(masterData.eventAvailable, masterData.eventData)
 
-    if (masterData.eventHappening) {
-      const storageCardId: number = Number(cardId[0]) + 1
-      if (!isNaN(storageCardId)) {
-        localStorage.setItem('msrEvent', `{"id":${masterData.eventData.id},"card":${storageCardId}}`)
-      }
-    } else {
-      localStorage.removeItem('msrEvent')
-    }
+    // if (masterData.eventHappening) {
+    //   const storageCardId: number = Number(cardId[0]) + 1
+    //   if (!isNaN(storageCardId)) {
+    //     localStorage.setItem('msrEvent', `{"id":${masterData.eventData.id},"card":${storageCardId}}`)
+    //   }
+    // } else {
+    //   localStorage.removeItem('msrEvent')
+    // }
 
-    const downloadCard = new MishiroIdol().downloadCard
+    // const downloadCard = new MishiroIdol().downloadCard
 
-    // const tmpawait = () => new Promise((resolve) => {
-    //   this.event.$once('_eventBgReady', () => {
-    //     resolve()
-    //   })
-    // })
+    // // const tmpawait = () => new Promise((resolve) => {
+    // //   this.event.$once('_eventBgReady', () => {
+    // //     resolve()
+    // //   })
+    // // })
 
-    let getBackgroundResult: string = ''
+    // let getBackgroundResult: string = ''
 
-    const getBackground = async (id: string | number): Promise<void> => {
-      try {
-        this.text = `Download card_bg_${id}`
-        this.loading = 0
-        getBackgroundResult = await downloadCard.call(this, id, 'eventBgReady', (prog: ProgressInfo) => {
-          this.text = (prog.name || '') + '　' + `${Math.ceil(prog.current / 1024)}/${Math.ceil(prog.max / 1024)} KB`
-          this.loading = prog.loading
-        })
+    // const getBackground = async (id: string | number): Promise<void> => {
+    //   try {
+    //     this.text = `Download card_bg_${id}`
+    //     this.loading = 0
+    //     getBackgroundResult = await downloadCard.call(this, id, 'eventBgReady', (prog: ProgressInfo) => {
+    //       this.text = (prog.name || '') + '　' + `${Math.ceil(prog.current / 1024)}/${Math.ceil(prog.max / 1024)} KB`
+    //       this.loading = prog.loading
+    //     })
 
-        this.loading = 99.99
-        if (getBackgroundResult/*  && getBackgroundResult !== 'await ipc' */) {
-          this.event.$emit('eventBgReady', id)
-        }
-      } catch (err: any) {
-        this.event.$emit('alert', this.$t('home.errorTitle'), (this.$t('home.downloadFailed') as string) + '<br/>' + (err.toString() as string))
-      }
-    }
+    //     this.loading = 99.99
+    //     if (getBackgroundResult/*  && getBackgroundResult !== 'await ipc' */) {
+    //       this.event.$emit('eventBgReady', id)
+    //     }
+    //   } catch (err: any) {
+    //     this.event.$emit('alert', this.$t('home.errorTitle'), (this.$t('home.downloadFailed') as string) + '<br/>' + (err.toString() as string))
+    //   }
+    // }
 
-    const background = configurer.get('background')
-    if (background) {
-      await getBackground(background)
-    } else {
-      // const cardIdEvolution = [(Number(cardId[0]) + 1), (Number(cardId[1]) + 1)];
-      if (masterData.eventHappening) {
-        await getBackground(Number(cardId[0]) + 1)
-      }
-    }
+    // const background = configurer.get('background')
+    // if (background) {
+    //   await getBackground(background)
+    // } else {
+    //   // const cardIdEvolution = [(Number(cardId[0]) + 1), (Number(cardId[1]) + 1)];
+    //   if (masterData.eventHappening) {
+    //     await getBackground(Number(cardId[0]) + 1)
+    //   }
+    // }
 
-    // if (getBackgroundResult === 'await ipc') await tmpawait()
+    // // if (getBackgroundResult === 'await ipc') await tmpawait()
 
-    if (masterData.eventHappening) this.event.$emit('eventRewardCard', cardId)
+    // if (masterData.eventHappening) this.event.$emit('eventRewardCard', cardId)
 
-    /* let iconId = []
-    for (let index = 0; index < masterData.gachaAvailable.length; index++) {
-      iconId.push(masterData.gachaAvailable[index].reward_id)
-    }
-    const iconTask = this.createCardIconTask(iconId)
-    await downloader.download(iconTask, ([_url, filepath]) => {
-      const name = path.basename(filepath)
-      this.text = name + '　' + downloader.index + '/' + iconTask.length
-      this.loading = 100 * downloader.index / iconTask.length
-    }, prog => {
-      this.loading = 100 * downloader.index / iconTask.length + prog.loading / iconTask.length
-    }) */
+    // /* let iconId = []
+    // for (let index = 0; index < masterData.gachaAvailable.length; index++) {
+    //   iconId.push(masterData.gachaAvailable[index].reward_id)
+    // }
+    // const iconTask = this.createCardIconTask(iconId)
+    // await downloader.download(iconTask, ([_url, filepath]) => {
+    //   const name = path.basename(filepath)
+    //   this.text = name + '　' + downloader.index + '/' + iconTask.length
+    //   this.loading = 100 * downloader.index / iconTask.length
+    // }, prog => {
+    //   this.loading = 100 * downloader.index / iconTask.length + prog.loading / iconTask.length
+    // }) */
 
-    // await this.getGachaIcon(masterData.gachaIcon)
-    // console.log(failedList)
+    // // await this.getGachaIcon(masterData.gachaIcon)
+    // // console.log(failedList)
     this.emitReady()
   }
 

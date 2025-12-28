@@ -12,7 +12,7 @@
     <MishiroIdol v-show="currentBlock === 'idol'" />
     <MishiroLive v-show="currentBlock === 'live'" />
     <!-- <MishiroGacha v-show="currentBlock === 'gacha'" :master="appData.master"/> -->
-    <MishiroCommu v-show="currentBlock === 'commu'" />
+    <!-- <MishiroCommu v-show="currentBlock === 'commu'" /> -->
     <MishiroMenu v-show="currentBlock === 'menu'" @checking="checking = true" @checked="checking = false" />
     <TheToggleButton @toggle="showBackground"/>
     <TheVersion />
